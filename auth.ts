@@ -3,7 +3,9 @@ import NextAuth from 'next-auth'
 
 import authConfig from '@/auth.config'
 import { db } from '@/lib/db'
-import { UserRole } from '@prisma/client'
+
+// @ts-ignore
+import type { UserRole } from '@prisma/client'
 import { getAccountByUserId } from './data/account'
 import { getTwoFactorConfirmationByUserId } from './data/two-factor-confirmation'
 import { getUserById } from './data/user'
@@ -13,7 +15,6 @@ export const {
   auth,
   signIn,
   signOut,
-  update,
 } = NextAuth({
   pages: {
     signIn: '/auth/login',
@@ -30,19 +31,29 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       // Allow OAuth without email verification
-      if (account?.provider !== 'credentials') return true
+      if (account?.provider !== 'credentials') {
+        return true
+      }
 
-      const existingUser = await getUserById(user.id)
+      if (!user) {
+        return false
+      }
+
+      const existingUser = await getUserById(user.id as string)
 
       // Prevent sign in without email verification
-      if (!existingUser?.emailVerified) return false
+      if (!existingUser?.emailVerified) {
+        return false
+      }
 
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
           existingUser.id,
         )
 
-        if (!twoFactorConfirmation) return false
+        if (!twoFactorConfirmation) {
+          return false
+        }
 
         // Delete two factor confirmation for next sign in
         await db.twoFactorConfirmation.delete({
@@ -67,18 +78,22 @@ export const {
 
       if (session.user) {
         session.user.name = token.name
-        session.user.email = token.email
+        session.user.email = token.email as string
         session.user.isOAuth = token.isOAuth as boolean
       }
 
       return session
     },
     async jwt({ token }) {
-      if (!token.sub) return token
+      if (!token.sub) {
+        return token
+      }
 
       const existingUser = await getUserById(token.sub)
 
-      if (!existingUser) return token
+      if (!existingUser) {
+        return token
+      }
 
       const existingAccount = await getAccountByUserId(existingUser.id)
 

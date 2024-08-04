@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "trunk check",
-    "format": "trunk fmt",
+    "lint": "trunk check **/*.ts **/*.tsx",
+    "format": "trunk fmt **/*.ts **/*.tsx",
     "db:studio": "npx prisma studio",
     "db:generate": "npx prisma generate",
     "db:push": "npx prisma db push"

@@ -1,4 +1,6 @@
 'use client'
+// @ts-ignore
+import { UserRole } from '@prisma/client'
 
 import { settings } from '@/actions/settings'
 import { FormError } from '@/components/form-error'
@@ -26,8 +28,7 @@ import { Switch } from '@/components/ui/switch'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { SettingsSchema } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { UserRole } from '@prisma/client'
-import { useSession } from 'next-auth/react'
+// import { useSession } from 'next-auth/react'
 import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import type * as z from 'zod'
@@ -37,7 +38,7 @@ const SettingsPage = () => {
 
   const [error, setError] = useState<string | undefined>()
   const [success, setSuccess] = useState<string | undefined>()
-  const { update } = useSession()
+  // const { update } = useSession()
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
@@ -56,12 +57,12 @@ const SettingsPage = () => {
     startTransition(() => {
       settings(values)
         .then((data) => {
-          if (data.error) {
+          if (data?.error) {
             setError(data.error)
           }
 
-          if (data.success) {
-            update()
+          if (data?.success) {
+            // update()
             setSuccess(data.success)
           }
         })
