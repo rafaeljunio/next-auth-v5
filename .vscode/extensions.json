@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "EditorConfig.EditorConfig",
+    "biomejs.biome",
+    "Trunk.io",
+    "bradlc.vscode-tailwindcss",
+    "unifiedjs.vscode-mdx"
+  ]
+}
