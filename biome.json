@@ -37,8 +37,5 @@
       "quoteStyle": "single",
       "jsxQuoteStyle": "single"
     }
-  },
-  "files": {
-    "ignore": ["scripts/*.js"]
   }
 }
